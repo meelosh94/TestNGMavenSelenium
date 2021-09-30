@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class BaseTest {
 
     public Config config;
+    String url, username, password;
     WebDriver driver;
     WebDriverWait wait;
 
@@ -22,6 +23,10 @@ public abstract class BaseTest {
         driver = new ChromeDriver();
         //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS); //implicit wait for all the actions
         wait = new WebDriverWait(driver, 5); //explicit wait
+
+        url = config.getUrl();
+        username = config.getUsername();
+        password = config.getPassword();
     }
     public BaseTest(@Optional("prod") String env, @Optional("acc1") String acc) throws IOException
     {

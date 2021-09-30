@@ -7,23 +7,17 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 
-public class LogInTest extends BaseTest {
-
-    String url, username, password;
+public class TestLogIn extends BaseTest {
 
     HomePage homePage;
     LoginPopup loginPopup;
 
-    public LogInTest() throws IOException {
+    public TestLogIn() throws IOException {
     }
 
     @BeforeClass
     private void Setup()
     {
-        url = config.getUrl();
-        username = config.getUsername();
-        password = config.getPassword();
-
         homePage = new HomePage(driver);
         loginPopup = new LoginPopup(driver);
     }
@@ -34,6 +28,20 @@ public class LogInTest extends BaseTest {
         driver.get(url);
     }
 
+
+    /*
+    Test for positive log in scenario
+    Precondition:
+    1.User is logged out
+
+    Actions:
+    1. Click 'sign in' button
+    2. Enter credentials
+    3. Click 'sign in' button
+
+    Assert:
+    1. 'Welcome back' message should be visible
+     */
     @Test
     private void TestLogInTrue()
     {
@@ -46,7 +54,7 @@ public class LogInTest extends BaseTest {
 
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id='batman-dialog-wrap']/div")));
         homePage.hoverAccountHover();
-        Assert.assertTrue(homePage.findSignOutButton(), "You are not logged in!");
+        Assert.assertTrue(homePage.findWelcomeBackLbl(), "You are not logged in!");
     }
 
     @Test(dataProvider = "falseCredentials")
@@ -71,6 +79,27 @@ public class LogInTest extends BaseTest {
                 {"xxx@yyy.zzz", "fakePassword"},
                 {"123@456.x", "Password123"}
         };
+    }
+
+    @Test
+    public void TestLogOut()
+    {
+        homePage.clickSignInButton();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='batman-dialog-wrap']/div")));
+        loginPopup.enterUsername(username);
+        loginPopup.enterPassword(password);
+        loginPopup.clickSignInButton();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id='batman-dialog-wrap']/div")));
+        homePage.hoverAccountHover();
+        Assert.assertTrue(homePage.findWelcomeBackLbl(), "You are not logged in!");
+
+        homePage.clickSignOutButton();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='form-searchbar']/div[2]"))); //wait for page to reload
+        homePage.hoverAccountHover();
+        Assert.assertFalse(homePage.findWelcomeBackLbl(), "You are still logged in!");
+
     }
 
 //    @AfterMethod

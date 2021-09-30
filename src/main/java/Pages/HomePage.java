@@ -9,7 +9,10 @@ public class HomePage extends BasePage {
 
     By accountHover = By.xpath("//*[@id='nav-user-account']/span");
     By signInButton = By.xpath("//*[@id='nav-user-account']/div/div/p[3]/a[2]");
-    By signOutButton = By.xpath("//*[@id='nav-user-account']/div/div/div/p/b");
+    By signOutButton = By.xpath("//*[@id='nav-user-account']/div/div/p[2]/a");
+    By welcomeBackLbl = By.xpath("//*[text()='Welcome back, ']");
+    By searchTB = By.xpath("//*[@id='search-key']");
+    By searchButton = By.className("search-button");
 
     public HomePage(WebDriver driver)
     {
@@ -31,15 +34,26 @@ public class HomePage extends BasePage {
         driver.findElement(signInButton).click();
     }
 
-    public boolean findSignOutButton() {
+    public void clickSignOutButton()
+    {
+        driver.findElement(signOutButton).click();
+    }
+
+    public boolean findWelcomeBackLbl() {
         try
         {
-            driver.findElement(signOutButton);
+            driver.findElement(welcomeBackLbl);
             return true;
         }
         catch (NoSuchElementException e)
         {
             return false;
         }
+    }
+
+    public void searchItem(String text)
+    {
+        driver.findElement(searchTB).sendKeys(text);
+        driver.findElement(searchButton).click();
     }
 }
